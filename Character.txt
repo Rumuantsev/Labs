@@ -1,0 +1,73 @@
+#include <fstream>
+#include <iostream>
+using namespace std;
+
+int main() {
+  setlocale(LC_ALL, "RU");
+  int singleLetterFrequency[91];
+  fstream singlesFile;
+  char character;
+
+  singlesFile.open("text.txt");
+  if (!singlesFile) {
+    cout << "Файл не найден.";
+    return 0;
+  }
+
+  for (int singleLetterIndex = 0; singleLetterIndex < 91; ++singleLetterIndex) {
+    singleLetterFrequency[singleLetterIndex] = 0;
+  }
+
+  while (character != EOF) {
+    character = singlesFile.get();
+    character = toupper(character);
+    ++singleLetterFrequency[character];
+  }
+
+  cout << endl << "Частота повторений букв:" << endl;
+  for (char character = 'A'; character <= 'Z'; ++character) {
+    if (singleLetterFrequency[character] != 0) {
+      cout << character << ": " << singleLetterFrequency[character] << endl;
+    }
+  }
+
+
+  int doubleLetterFrequency[128][128];
+  fstream doublesFile;
+
+  doublesFile.open("text.txt");
+  if (!doublesFile) {
+    cout << "Файл не найден.";
+    return 0;
+  }
+
+  for (int firstIterator = 0; firstIterator < 128; ++firstIterator) {
+    for (int secondIterator = 0; secondIterator < 128; ++secondIterator) {
+      doubleLetterFrequency[firstIterator][secondIterator] = 0;
+    }
+  }
+
+  char firstCharacter, secondCharacter;
+  firstCharacter = doublesFile.get();
+  secondCharacter = doublesFile.get();
+
+  while (secondCharacter != EOF) {
+    firstCharacter = toupper(firstCharacter);
+    secondCharacter = toupper(secondCharacter);
+    ++doubleLetterFrequency[firstCharacter][secondCharacter];
+    firstCharacter = secondCharacter;
+    secondCharacter = doublesFile.get();
+  }
+
+  cout << endl << "Частота повторений двухбуквенных сочетаний:" << endl;
+  for (char firstCharacter = 'A'; firstCharacter <= 'Z'; ++firstCharacter) {
+    for (char secondCharacter = 'A'; secondCharacter <= 'Z'; ++secondCharacter) {
+
+      if (doubleLetterFrequency[firstCharacter][secondCharacter]) {
+        cout << firstCharacter << secondCharacter << ": " << doubleLetterFrequency[firstCharacter][secondCharacter] << endl;
+      }
+    }
+  }
+
+  return 0;
+}
